@@ -1,0 +1,33 @@
+<p>
+    [TITLE]Subnets[/TITLE]
+</p>
+<p> Create a subnet within the Hyper-VPC in your AWS account with the following properties:</p>
+<ul>
+    <li>
+        <p>
+            Name: Hyper-Subnet
+        </p>
+    </li><li>
+    <p> IPv4 CIDR block:<code>172.16.0.0/28</code>;</p>
+</li><li><p>Availability Zone:  <code> us-east-1a</code></p>
+</li>
+    <li>
+        Auto-assign public IPv4 address: Enabled
+    </li>
+</ul>
+<p>
+    Once you've created the subnet, use the following AWS CLI command to retrieve information about it. This will provide a JSON output with the relevant information. Provide the response as the answer to this task.
+    The --query parameter is structured to retrieve the subnet name, IPv4 CIDR block, availability zone, and whether auto-assign public IPv4 address is enabled:
+</p>
+<pre><code class="language-bash"># if you use PowerShell as your shell, replace backslashes (\) with backticks (`) as line seperators
+
+aws ec2 describe-subnets \
+  --filters "Name=vpc-id,Values= actual-vpc-id" "Name=tag:Name,Values=Hyper-Subnet" \
+  --query 'Subnets[].{Name:Tags[?Key==`Name`].Value | [0], IPv4CIDR:CidrBlock, AvailabilityZone:AvailabilityZone, MapPublicIpOnLaunch:MapPublicIpOnLaunch}' \
+  --region us-east-1</code></pre>
+
+<p>Replace <code>actual-vpc-id</code> with the actual VPC ID of the "Hyper-VPC." You can get it from the console or using the following command:</p>
+<pre><code class="language-bash">aws ec2 describe-vpcs --filters "Name=tag:Name,Values=Hyper-VPC" --query 'Vpcs[0].VpcId' --output text --region us-east-1</code></pre>
+
+
+
